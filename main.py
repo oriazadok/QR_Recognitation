@@ -140,7 +140,7 @@ def process_video_file(video_path, csv_output, video_output, frames_output_dir):
 
 if __name__ == "__main__":
     input_video_path = sys.argv[1]
-    csv_file = 'output\\output_data.csv'
-    frames_output_directory = 'output\\img'
+    csv_file = 'output/output_data.csv'
+    frames_output_directory = 'output/img'
     output_video_path = 'outputs/out.mp4'
     process_video_file(input_video_path, csv_file, output_video_path, frames_output_directory)
