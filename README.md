@@ -1,11 +1,7 @@
 # QR Recognitation
 
 ## Ex2
-<h6>submitters:</h6>
-<p>Name: liav levi, ID:206603193</p>
-<p>Name: Barak Sharabi, ID:</p>
-<p>Name: Oria Zadok, ID:315500157</p>
-<p>Name: Sagi Yosef Azulai, ID:207544230</p>
+
 
 ## HOW TO RUN
 <p> first thing to do for this assignment running and checking: </p>

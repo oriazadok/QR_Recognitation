@@ -147,10 +147,11 @@ if __name__ == "__main__":
         print("Usage: python main.py <path_to_video>")
         sys.exit(1)
     input_video_path = sys.argv[1]
+    input_base_name = os.path.splitext(os.path.basename(input_video_path))[0]
 
-    csv_file = os.path.join('output', 'output_data.csv')
-    frames_output_directory = os.path.join('output', 'img')
-    output_video_path = os.path.join('output', 'out.mp4')
+    output_video_path = os.path.join('outputs', f'{input_base_name}_out.mp4')
+    frames_output_directory = os.path.join('outputs', f'{input_base_name}_frames')
+    csv_file = os.path.join('outputs', f'{input_base_name}_data.csv')
 
     # Global list to store CSV data
     csv_data = []
@@ -160,13 +161,3 @@ if __name__ == "__main__":
 
     # Process the video file
     process_video_file(input_video_path, csv_file, output_video_path, frames_output_directory)
-
-
-    # csv_file = 'output/output_data.csv'
-    # frames_output_directory = 'output/img'
-    # output_video_path = 'outputs/out.mp4'
-
-
-    # csv_data = []
-    # prepare_directories([frames_output_directory])
-    # process_video_file(input_video_path, csv_file, output_video_path, frames_output_directory)
