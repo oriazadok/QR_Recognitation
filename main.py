@@ -77,13 +77,6 @@ def write2csv(csv_output):
     df = pd.DataFrame(csv_data, columns=columns)  # Create a DataFrame from the data
     df.to_csv(csv_output, index=False)  # Write DataFrame to CSV file
 
-# Function to write the collected QR code data to a CSV file
-def write2csv(csv_output):
-    columns = ['Frame ID', 'QR ID', 'QR 2D (Corner Points)', 'Distance', 'Yaw (degrees)', 'Pitch (degrees)',
-               'Roll (degrees)']
-    df = pd.DataFrame(csv_data, columns=columns)  # Create a DataFrame from the data
-    df.to_csv(csv_output, index=False)  # Write DataFrame to CSV file
-
 
 # Main function to process the video file
 def process_video_file(video_path, csv_output, video_output, frames_output_dir, resolution=(1280, 720), field_of_view=82.6):
@@ -116,6 +109,7 @@ def process_video_file(video_path, csv_output, video_output, frames_output_dir, 
         corners, ids = detect_QR(frame)  # Detect QR codes in the frame
         
         if ids is not None:
+
             for i in range(len(ids)):
                 # Estimate the pose of the detected QR codes
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.05, camera_matrix, distortion_coeffs)
@@ -150,7 +144,8 @@ if __name__ == "__main__":
     input_base_name = os.path.splitext(os.path.basename(input_video_path))[0]
 
     output_video_path = os.path.join('outputs', f'{input_base_name}_out.mp4')
-    frames_output_directory = os.path.join('outputs', f'{input_base_name}_frames')
+    # frames_output_directory = os.path.join('outputs', f'{input_base_name}_frames')
+    frames_output_directory = os.path.join('outputs', f'video_all_frames')
     csv_file = os.path.join('outputs', f'{input_base_name}_data.csv')
 
     # Global list to store CSV data
@@ -161,3 +156,4 @@ if __name__ == "__main__":
 
     # Process the video file
     process_video_file(input_video_path, csv_file, output_video_path, frames_output_directory)
+

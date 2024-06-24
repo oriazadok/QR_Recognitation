@@ -4,7 +4,9 @@ from PIL import Image, ImageTk
 import numpy as np
 
 import os
-from main import detect_qr_codes, draw_rectangles
+from main import detect_QR
+
+# TODO make proper pytest tests
 
 # @pytest.fixture
 # def test_frame():
@@ -30,36 +32,34 @@ from main import detect_qr_codes, draw_rectangles
 #     frame = create_test_frame('Test QR Code')
 #     return frame
 
-def test_detect_qr_code():
-    # frame1 = Image.open('TestData/frames/frames/frame_282.jpg')
-    video_capture = cv2.VideoCapture('TestData/frames/frames/frame_3.jpg')
-    ret, frame = video_capture.read()
+
+def read_frame(path):
+    frame = cv2.imread(path)
+    return detect_QR(frame)
     
-    points = detect_qr_codes(frame)
-    print(points)
-    draw_rectangles(frame,points)
-    output_dir = 'TestData/TestsOutput'
-    output_path = os.path.join(output_dir, 'test_frame_3.jpg')
 
-    if ret:
-        # Save the frame as an image
-        cv2.imwrite('TestData/TestsOutput/output_image.jpg', frame)
-        print("Image saved successfully.")
-    else:
-        print("Error: Unable to read the frame from the video capture.")
+def test_blurry_frame():
+    corners,ids = read_frame('TestData/frames/blurry_image_frame.jpg')
+    assert ids == None
     
-    # Ensure the output directory exists
-    # os.makedirs(output_dir, exist_ok=True)
-    # frame.save(output_path)
+def test_cutted_frame():
+    corners,ids = read_frame('TestData/frames/cutted_image_frame.jpg')
+    assert ids == None
 
-test_detect_qr_code()
+def test_basic_frame():
+    corners,ids = read_frame('TestData/frames/basic_case_frame.jpg')
+    assert ids[0] == [1]
+    print(corners)
+    assert (corners[0][0][0] == [712., 116.]).all()
+    
+
+test_basic_frame()
+test_cutted_frame()
+test_blurry_frame()
+
+
+# TODO compute_3d_pose test by mocking the input values and assert equals to excpected output
 
 
 
-# def test_detect_qr_codes(test_frame):
-#     points = detect_qr_codes(test_frame)
-#     assert len(points) > 0, "QR code not detected"
-#     assert len(points[0]) == 4, "QR code corners not detected correctly"
-#     for point in points[0]:
-#         assert len(point) == 2, "Each point should have x and y coordinates"
 
