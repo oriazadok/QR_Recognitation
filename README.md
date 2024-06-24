@@ -23,11 +23,8 @@ pip install -r requirements.txt --user
 python main.py <video_path>
 ~~~
 
-<p> to run the tests(we disable warning as we use old version of pandas and numpy)</p>
+<p> to run the tests</p>
 
 ~~~
 pytest --disable-warnings
-python -m Tests.TestDroneSimulatorTest
-
-
 ~~~

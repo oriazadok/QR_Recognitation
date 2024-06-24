@@ -107,7 +107,7 @@ def process_video_file(video_path, csv_output, video_output, frames_output_dir, 
             break
 
         corners, ids = detect_QR(frame)  # Detect QR codes in the frame
-        
+
         if ids is not None:
 
             for i in range(len(ids)):
@@ -144,8 +144,7 @@ if __name__ == "__main__":
     input_base_name = os.path.splitext(os.path.basename(input_video_path))[0]
 
     output_video_path = os.path.join('outputs', f'{input_base_name}_out.mp4')
-    # frames_output_directory = os.path.join('outputs', f'{input_base_name}_frames')
-    frames_output_directory = os.path.join('outputs', f'video_all_frames')
+    frames_output_directory = os.path.join('outputs', f'{input_base_name}_frames')
     csv_file = os.path.join('outputs', f'{input_base_name}_data.csv')
 
     # Global list to store CSV data
