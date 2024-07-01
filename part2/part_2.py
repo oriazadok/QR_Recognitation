@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import cv2
-
+import math
 
 
 def best_single_command(translation, rotation):
@@ -55,19 +55,73 @@ def compute_transform(tvec1, rvec1, tvec2, rvec2):
     rvec_diff, _ = cv2.Rodrigues(R_diff)
     return translation, rvec_diff
 
-def detect_aruco(frame, camera_matrix, dist_coeffs):
+    # Convert degrees to radians
+def compute_rotation_matrix(yaw, pitch, roll):
+    # Convert degrees to radians
+    roll = roll.iloc[0]
+    yaw = yaw.iloc[0]
+    pitch = pitch.iloc[0]
+
+    
+    yaw_rad = np.radians(yaw)
+    pitch_rad = np.radians(pitch)
+    roll_rad = np.radians(roll)
+    
+    # Rotation matrices
+    Rz = np.array([[np.cos(roll_rad), -np.sin(roll_rad), 0],
+                   [np.sin(roll_rad), np.cos(roll_rad), 0],
+                   [0, 0, 1]])
+    
+    Ry = np.array([[np.cos(pitch_rad), 0, np.sin(pitch_rad)],
+                   [0, 1, 0],
+                   [-np.sin(pitch_rad), 0, np.cos(pitch_rad)]])
+    
+    Rx = np.array([[1, 0, 0],
+                   [0, np.cos(yaw_rad), -np.sin(yaw_rad)],
+                   [0, np.sin(yaw_rad), np.cos(yaw_rad)]])
+    
+    # Combine rotation matrices R = Rz * Ry * Rx
+    R = np.dot(Rz, np.dot(Ry, Rx))
+    
+    return R
+    
+def calculate_camera_location(distance, yaw, pitch, roll):
+    # Compute rotation matrix
+    R = compute_rotation_matrix(yaw, pitch, roll)
+    
+    # Define orientation vectors
+    x_marker = np.array([1, 0, 0])  # X vector along the width of the marker
+    y_marker = np.array([0, 1, 0])  # Y vector along the height of the marker
+    z_marker = np.array([0, 0, 1])  # Z vector coming out of the marker
+    
+    # Transform vectors to camera space
+    x_cam = R.dot(x_marker)
+    y_cam = R.dot(y_marker)
+    z_cam = R.dot(z_marker)
+    
+    # Calculate camera location in camera space
+    distance = distance.iloc[0]
+    camera_location = -distance * R.T.dot(np.array([0, 0, 1]))  # Assuming z-axis of marker is along -Z in camera space
+    
+    return camera_location, x_cam, y_cam, z_cam
+    
+
+def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
     """
     Detects the ArUco marker in the given frame and returns its translation and rotation vectors.
     
     Parameters:
     frame (numpy.ndarray): The image frame containing the ArUco marker.
+    camera_matrix (numpy.ndarray): Intrinsic camera matrix.
+    dist_coeffs (numpy.ndarray): Distortion coefficients.
     
     Returns:
-    tuple: Translation vector (tvec) and rotation vector (rvec) of the detected ArUco marker.
+    The function returns camera_location, x_cam, y_cam, and z_cam, which describe the camera location and the orientation vectors relative to the ArUco marker.
     """
 
     # Convert the frame to grayscale
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
     try:
         # Detect markers using ArUco dictionary
         corners, ids, _ = cv2.aruco.detectMarkers(gray_frame, cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_100))
@@ -75,13 +129,52 @@ def detect_aruco(frame, camera_matrix, dist_coeffs):
         if ids is not None and len(ids) > 0:
             # Estimate pose of the first detected marker
             rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.05, camera_matrix, dist_coeffs)
-            return tvecs[0][0], rvecs[0][0]
+            
+            # Assuming the ArUco marker is at the origin (0,0,0) in marker space
+            # X axis is along the width of the marker, Y axis is along the height, Z axis is coming out of the marker
+            # Transforming tvec to camera space
+            tvec_cam = np.squeeze(tvecs[0])
+            
+            # Get rotation matrix from rotation vector
+            R, _ = cv2.Rodrigues(rvecs[0])
+            
+            # Define the desired vectors in marker space
+            x_marker = np.array([1, 0, 0])  # X vector along the width of the marker
+            y_marker = np.array([0, 1, 0])  # Y vector along the height of the marker
+            z_marker = np.array([0, 0, 1])  # Z vector coming out of the marker
+            
+            # Transform vectors to camera space
+            x_cam = R.dot(x_marker)
+            y_cam = R.dot(y_marker)
+            z_cam = R.dot(z_marker)
+            
+            # Calculate camera location in camera space
+            camera_location = -R.T.dot(tvec_cam)
+            
+            return camera_location, x_cam, y_cam, z_cam
+        
         else:
             raise ValueError("No ArUco marker detected")
 
     except Exception as e:
         print(f"Error detecting markers: {e}")
-        return None, None 
+        return None, None, None, None
+    
+import math
+
+def calculate_3D_distance(v1, v2):
+    """
+    Returns:
+    float: The distance between the two vectors.
+    """
+    
+
+    x1, y1, z1 = v1
+    x2, y2, z2 = v2
+    distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
+    return distance
+
+
 
 def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs):
     """
@@ -98,15 +191,32 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     str: The best movement command to move from the first marker to the second.
     """
     # Detect ArUco markers in both frames
-    tvec1, rvec1 = detect_aruco(frame, camera_matrix, dist_coeffs)
-    tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["distance"], next_frame_data["yaw"], next_frame_data["pitch"], next_frame_data["roll"])
     
-    # Compute translation and rotation differences
-    translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
+    live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
+    camera_location, x_cam, y_cam, z_cam = calculate_camera_location(next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"])
+
+    print(live_camera_location)
+    print(camera_location)
+
+    # dist_t = calculate_3D_distance(tvec1,tvec2)
+    # dist_r = calculate_3D_distance(rvec1,rvec2)
+
+    # while dist_t > 1 and dist_r > 1:
+    #     # Compute translation and rotation differences
+    #     translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
+        
+    #     # Generate the best single movement command based on the differences
+    #     command = best_single_command(translation, rotation)
+    #     tvec1, rvec1 = detect_aruco(frame, camera_matrix, dist_coeffs)
+
+    #     tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"])
+    #     #  (next_frame_data["Distance"], 
+    #                                         #  next_frame_data["Yaw (degrees)"], 
+    #                                         #  next_frame_data["Pitch (degrees)"], 
+    #                                         #  next_frame_data["Roll (degrees)"])
+    #     dist_t = calculate_3D_distance(tvec1,tvec2)
+    #     dist_r = calculate_3D_distance(rvec1,rvec2)
     
-    # Generate the best single movement command based on the differences
-    command = best_single_command(translation, rotation)
-    return command
 
 
 def isOverlap(rvec1, tvec1, tvec2, rvec2):
@@ -197,7 +307,7 @@ def get_rows_by_frame_id(df, frame_id):
     Returns:
     pandas.DataFrame: The rows matching the frame ID, or an empty DataFrame if the frame ID is not found.
     """
-    matching_rows = df[df['Frame ID'] == frame_id]
+    matching_rows = df[df.index.get_level_values('Frame ID') == frame_id]
     if not matching_rows.empty:
         return matching_rows  # Return all rows that match the frame ID
     else:
@@ -251,12 +361,12 @@ def calculate_next_frame(online_frame,df:pd.DataFrame):
     online_qrs = detect_QR(online_frame)[1]
     online_qrs = [x[0] for x in online_qrs]
     # Filter DataFrame to include only rows with QR IDs in the tuple
-    df_filtered = df[df['QR ID'].isin(online_qrs)]
+    df_filtered = df[df.index.get_level_values('QR ID').isin(online_qrs)]
     if df_filtered.empty:
         return None,None
-    max_frame_id_row = df_filtered.loc[df_filtered['Frame ID'].idxmax()]
-    max_frame_id = max_frame_id_row['Frame ID']
-    corresponding_qr_id = max_frame_id_row['QR ID']
+    max_frame_id = df_filtered.index.get_level_values('Frame ID').max()
+    max_frame_id_row = df_filtered.loc[(df_filtered.index.get_level_values('Frame ID') == max_frame_id)]
+    corresponding_qr_id = max_frame_id_row.index.get_level_values('QR ID')
     return max_frame_id, corresponding_qr_id
     
 
@@ -270,11 +380,11 @@ def controler(file_path):
 
     # Load the CSV file
     df = pd.read_csv(file_path, sep=None, engine='python')
-
+    df.set_index(['Frame ID', 'QR ID'], inplace=True)
     # Initialize the video capture object
     # cap = cv2.VideoCapture('/dev/video3')
     # cap = cv2.VideoCapture(1)  # Use 0 for default webcam , 1 for external webcam
-    cap = cv2.VideoCapture('/mnt/c/Users/Liavm/Documents/ex1/QR_Recognitation/videos/online_sim.mp4')
+    cap = cv2.VideoCapture('/home/oriaz/Desktop/QR_Recognitation/videos/online_sim.mp4')
 
 
     # Check if the camera is opened successfully
@@ -302,7 +412,7 @@ def controler(file_path):
             if next_frame_id == None:
                 continue
 
-            df = df[df['Frame ID'] >= next_frame_id]
+            df = df[df.index.get_level_values('Frame ID') >= next_frame_id]
             # # find a target frame row in the csv
             # if not first_iteration:
             #     next_frame_id = get_next_frame_id(df, next_frame_id)
@@ -313,17 +423,16 @@ def controler(file_path):
             rvec1, tvec1, _ = cv2.aruco.estimatePoseSingleMarkers(corners_cap_frame[index], 0.05, camera_matrix, dist_coeffs)
 
             # get the corners of the csv frame
-            next_frame_data = next_frame_rows[next_frame_rows['QR ID'] == next_qr]
+           
+            next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
+            
             tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["Distance"], 
                                              next_frame_data["Yaw (degrees)"], 
                                              next_frame_data["Pitch (degrees)"], 
                                              next_frame_data["Roll (degrees)"])
-            print(f'rvec1:{rvec1}')
-            print(f'rvec2:{rvec2}')
-            print(f'tvec1:{tvec1}')
-            print(f'tvec2:{tvec2}')
-            while(isOverlap(rvec1, tvec1, tvec2, rvec2 ) == False):
-                print(get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs))
+        
+            
+            get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs)
             current_frame_id = next_frame_id
 
         # Display the frame
