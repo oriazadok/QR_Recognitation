@@ -106,13 +106,14 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     
     # Generate the best single movement command based on the differences
     command = best_single_command(translation, rotation)
-    
     return command
 
 
 def isOverlap(rvec1, tvec1, tvec2, rvec2):
     pass
 
+def close_enough():
+    pass
 
 def eulerAnglesToRotationMatrix(yaw, pitch, roll):
     # Convert angles to radians
@@ -251,13 +252,16 @@ def calculate_next_frame(online_frame,df:pd.DataFrame):
     online_qrs = [x[0] for x in online_qrs]
     # Filter DataFrame to include only rows with QR IDs in the tuple
     df_filtered = df[df['QR ID'].isin(online_qrs)]
+    if df_filtered.empty:
+        return None,None
     max_frame_id_row = df_filtered.loc[df_filtered['Frame ID'].idxmax()]
     max_frame_id = max_frame_id_row['Frame ID']
     corresponding_qr_id = max_frame_id_row['QR ID']
     return max_frame_id, corresponding_qr_id
     
 
-    
+def close_enough():
+    pass    
     
 
 def controler(file_path):
@@ -269,7 +273,8 @@ def controler(file_path):
 
     # Initialize the video capture object
     # cap = cv2.VideoCapture('/dev/video3')
-    cap = cv2.VideoCapture('/home/oriaz/Desktop/QR_Recognitation/videos/online_sim.mp4')
+    # cap = cv2.VideoCapture(1)  # Use 0 for default webcam , 1 for external webcam
+    cap = cv2.VideoCapture('/mnt/c/Users/Liavm/Documents/ex1/QR_Recognitation/videos/online_sim.mp4')
 
 
     # Check if the camera is opened successfully
@@ -288,10 +293,15 @@ def controler(file_path):
             break
 
         corners_cap_frame, ids_cap_frame = detect_QR(frame)  # Detect QR codes in the frame
+        current_frame_id = None
         if ids_cap_frame is not None:
             # if first_iteration:
             # first_iteration = False
+            
             next_frame_id, next_qr = calculate_next_frame(frame,df)
+            if next_frame_id == None:
+                continue
+
             df = df[df['Frame ID'] >= next_frame_id]
             # # find a target frame row in the csv
             # if not first_iteration:
@@ -303,14 +313,18 @@ def controler(file_path):
             rvec1, tvec1, _ = cv2.aruco.estimatePoseSingleMarkers(corners_cap_frame[index], 0.05, camera_matrix, dist_coeffs)
 
             # get the corners of the csv frame
-            next_frame_data = next_frame_rows[next_frame_rows['QR ID'] == 5]
+            next_frame_data = next_frame_rows[next_frame_rows['QR ID'] == next_qr]
             tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["Distance"], 
                                              next_frame_data["Yaw (degrees)"], 
                                              next_frame_data["Pitch (degrees)"], 
                                              next_frame_data["Roll (degrees)"])
-
+            print(f'rvec1:{rvec1}')
+            print(f'rvec2:{rvec2}')
+            print(f'tvec1:{tvec1}')
+            print(f'tvec2:{tvec2}')
             while(isOverlap(rvec1, tvec1, tvec2, rvec2 ) == False):
                 print(get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs))
+            current_frame_id = next_frame_id
 
         # Display the frame
         cv2.imshow('Live Stream', frame)
@@ -322,6 +336,8 @@ def controler(file_path):
     # Release the video capture object and close the window
     cap.release()
     cv2.destroyAllWindows()
+
+
 
 
 if __name__ == "__main__":
