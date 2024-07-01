@@ -162,18 +162,14 @@ def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
     
 import math
 
+def transform_coordinate_system():
+    pass
+
 def calculate_3D_distance(v1, v2):
-    """
-    Returns:
-    float: The distance between the two vectors.
-    """
-    
-
-    x1, y1, z1 = v1
-    x2, y2, z2 = v2
-    distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
-    return distance
-
+    ans = np.linalg.norm(v1 - v2)
+    if not ans:
+        return 0
+    return ans
 
 
 def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs):
@@ -194,29 +190,34 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     
     live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
     camera_location, x_cam, y_cam, z_cam = calculate_camera_location(next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"])
+    rotation_matrix = np.column_stack((x_cam, y_cam, z_cam))
+    transformed_live_location = rotation_matrix.dot(live_camera_location)
+    distance = calculate_3D_distance(transformed_live_location, camera_location)
 
-    print(live_camera_location)
-    print(camera_location)
-
-    # dist_t = calculate_3D_distance(tvec1,tvec2)
-    # dist_r = calculate_3D_distance(rvec1,rvec2)
-
-    # while dist_t > 1 and dist_r > 1:
-    #     # Compute translation and rotation differences
-    #     translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
+    # while distance > 1:
+        # # Compute translation and rotation differences
+        # translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
         
-    #     # Generate the best single movement command based on the differences
-    #     command = best_single_command(translation, rotation)
-    #     tvec1, rvec1 = detect_aruco(frame, camera_matrix, dist_coeffs)
+        # # Generate the best single movement command based on the differences
+        # command = best_single_command(translation, rotation)
+    live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
+    transformed_live_location = rotation_matrix.dot(live_camera_location)
+    distance = calculate_3D_distance(transformed_live_location, camera_location)
 
-    #     tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"])
-    #     #  (next_frame_data["Distance"], 
-    #                                         #  next_frame_data["Yaw (degrees)"], 
-    #                                         #  next_frame_data["Pitch (degrees)"], 
-    #                                         #  next_frame_data["Roll (degrees)"])
-    #     dist_t = calculate_3D_distance(tvec1,tvec2)
-    #     dist_r = calculate_3D_distance(rvec1,rvec2)
-    
+    movement_vector = camera_location - transformed_live_location
+    THRESHOLD = 0.1
+    if movement_vector[0] > THRESHOLD:
+        print('right')
+    elif movement_vector[0] < -THRESHOLD:
+        print('left')
+    if movement_vector[1] > THRESHOLD:
+        print("up")
+    elif movement_vector[1] < -THRESHOLD:
+        print("down")
+    if movement_vector[2] > THRESHOLD:
+        print("forward")
+    elif movement_vector[2] < -THRESHOLD:
+        print("backward")
 
 
 def isOverlap(rvec1, tvec1, tvec2, rvec2):
