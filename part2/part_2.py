@@ -110,7 +110,7 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     return command
 
 
-def isOverlap():
+def isOverlap(rvec1, tvec1, tvec2, rvec2):
     pass
 
 
@@ -146,16 +146,26 @@ def eulerAnglesToRotationMatrix(yaw, pitch, roll):
     return R
 
 def calculate_rvec_tvec(distance, yaw, pitch, roll):
-    # Get the rotation matrix
-    R = eulerAnglesToRotationMatrix(yaw, pitch, roll)
+    # Extract scalar values from Series
+    distance_value = distance.iloc[0]
+    yaw_value = yaw.iloc[0]
+    pitch_value = pitch.iloc[0]
+    roll_value = roll.iloc[0]
 
-    # Convert rotation matrix to rotation vector
-    rvec, _ = cv2.Rodrigues(R)
+    # Convert angles to radians
+    yaw_rad = np.radians(yaw_value)
+    pitch_rad = np.radians(pitch_value)
+    roll_rad = np.radians(roll_value)
+
+    # Compute rotation matrix
+    R = eulerAnglesToRotationMatrix(yaw_rad, pitch_rad, roll_rad)
 
     # Create the translation vector (assuming distance is along the z-axis)
-    tvec = np.array([[0], [0], [distance]])
+    tvec = np.array([[0], [0], [distance_value]])
 
-    return tvec, rvec
+    return tvec, R
+
+
 
 def find_dest_qr_id(ids_frame, next_qr_ids):
     pass
@@ -318,6 +328,8 @@ if __name__ == "__main__":
 
     file_path = '../outputs/challengeB_data.csv'
     controler(file_path)
+
+    
 # if __name__ == "__main__":
 #     df = pd.read_csv('../outputs/challengeB_data.csv', sep=None, engine='python')
 #     filtered_df = df[(df['Frame ID'] >= 425) & (df['Frame ID'] <= 427)]
