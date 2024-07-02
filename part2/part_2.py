@@ -3,59 +3,6 @@ import pandas as pd
 import cv2
 import math
 
-
-def best_single_command(translation, rotation):
-    """
-    Determines the single best movement command to bring the first ArUco marker closest to the second.
-    
-    Parameters:
-    translation (numpy.ndarray): Translation difference between the two markers.
-    rotation (numpy.ndarray): Rotation difference between the two markers.
-    
-    Returns:
-    str: The best movement command.
-    """
-    commands = {
-        "forward": translation[2],
-        "backward": -translation[2],
-        "right": translation[0],
-        "left": -translation[0],
-        "up": translation[1],
-        "down": -translation[1],
-        "turn right": rotation[2],
-        "turn left": -rotation[2]
-    }
-    
-    # Select the command with the maximum absolute value
-    best_command = max(commands, key=commands.get)
-    
-    return best_command
-
-def compute_transform(tvec1, rvec1, tvec2, rvec2):
-    """
-    Computes the translation and rotation needed to move from the first ArUco marker's position 
-    and orientation to the second.
-    
-    Parameters:
-    tvec1 (numpy.ndarray): Translation vector of the first ArUco marker.
-    rvec1 (numpy.ndarray): Rotation vector of the first ArUco marker.
-    tvec2 (numpy.ndarray): Translation vector of the second ArUco marker.
-    rvec2 (numpy.ndarray): Rotation vector of the second ArUco marker.
-    
-    Returns:
-    tuple: Translation difference and rotation difference between the two markers.
-    """
-    # Calculate translation difference
-    translation = tvec2 - tvec1
-    # Convert rotation vectors to rotation matrices
-    R1, _ = cv2.Rodrigues(rvec1)
-    R2, _ = cv2.Rodrigues(rvec2)
-    # Calculate rotation difference
-    R_diff = R2 @ R1.T
-    rvec_diff, _ = cv2.Rodrigues(R_diff)
-    return translation, rvec_diff
-
-    # Convert degrees to radians
 def compute_rotation_matrix(yaw, pitch, roll):
     # Convert degrees to radians
     roll = roll.iloc[0]
@@ -172,7 +119,7 @@ def calculate_3D_distance(v1, v2):
     return ans
 
 
-def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs):
+def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs):
     """
     Calculates the best single movement command needed to move from the position and orientation of the ArUco 
     marker in the first frame to the position and orientation of the marker in the second frame.
@@ -193,16 +140,17 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     rotation_matrix = np.column_stack((x_cam, y_cam, z_cam))
     transformed_live_location = rotation_matrix.dot(live_camera_location)
     distance = calculate_3D_distance(transformed_live_location, camera_location)
-
+    # TODO  UNCOMMAND THIS 
     # while distance > 1:
         # # Compute translation and rotation differences
         # translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
         
         # # Generate the best single movement command based on the differences
         # command = best_single_command(translation, rotation)
+    # TODO YOU NEED TO GIVE THE FOLLOWING 3 LINES TAP WHILE STAT USE THIS FOR THE FOR LOOP
     live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
     transformed_live_location = rotation_matrix.dot(live_camera_location)
-    distance = calculate_3D_distance(transformed_live_location, camera_location)
+    distance = calculate_3D_distance(transformed_live_location, camera_location) 
 
     movement_vector = camera_location - transformed_live_location
     THRESHOLD = 0.1
@@ -219,12 +167,6 @@ def get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs
     elif movement_vector[2] < -THRESHOLD:
         print("backward")
 
-
-def isOverlap(rvec1, tvec1, tvec2, rvec2):
-    pass
-
-def close_enough():
-    pass
 
 def eulerAnglesToRotationMatrix(yaw, pitch, roll):
     # Convert angles to radians
@@ -256,45 +198,6 @@ def eulerAnglesToRotationMatrix(yaw, pitch, roll):
     # Combined rotation matrix
     R = Rz_yaw @ Ry_pitch @ Rx_roll
     return R
-
-def calculate_rvec_tvec(distance, yaw, pitch, roll):
-    # Extract scalar values from Series
-    distance_value = distance.iloc[0]
-    yaw_value = yaw.iloc[0]
-    pitch_value = pitch.iloc[0]
-    roll_value = roll.iloc[0]
-
-    # Convert angles to radians
-    yaw_rad = np.radians(yaw_value)
-    pitch_rad = np.radians(pitch_value)
-    roll_rad = np.radians(roll_value)
-
-    # Compute rotation matrix
-    R = eulerAnglesToRotationMatrix(yaw_rad, pitch_rad, roll_rad)
-
-    # Create the translation vector (assuming distance is along the z-axis)
-    tvec = np.array([[0], [0], [distance_value]])
-
-    return tvec, R
-
-
-
-def find_dest_qr_id(ids_frame, next_qr_ids):
-    pass
-
-def find_common_qr_id(ids_frame, next_qr_ids):
-    # Convert lists to sets
-    set1 = set(ids_frame)
-    set2 = set(next_qr_ids)
-
-    # Find the intersection of the sets
-    common_elements = set1.intersection(set2)
-
-    # Return one common element or None if no common elements
-    if common_elements:
-        return next(iter(common_elements))
-    else:
-        return None
 
 # get all rows from the csv with the same frame ID
 def get_rows_by_frame_id(df, frame_id):
@@ -331,7 +234,6 @@ def get_next_frame_id(df, frame_id):
 
 # Function to detect QR codes in a gtarget_idiven frame
 def detect_QR(frame):
-
     # Convert the frame to grayscale
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     try:
@@ -371,21 +273,18 @@ def calculate_next_frame(online_frame,df:pd.DataFrame):
     return max_frame_id, corresponding_qr_id
     
 
-def close_enough():
-    pass    
-    
-
-def controler(file_path):
-
+def controller(file_path):
+    # TODO add camera parameters 
     camera_matrix, dist_coeffs = initialize_camera_parameters()
 
     # Load the CSV file
     df = pd.read_csv(file_path, sep=None, engine='python')
     df.set_index(['Frame ID', 'QR ID'], inplace=True)
+    # TODO change path to live cam path
     # Initialize the video capture object
     # cap = cv2.VideoCapture('/dev/video3')
     # cap = cv2.VideoCapture(1)  # Use 0 for default webcam , 1 for external webcam
-    cap = cv2.VideoCapture('/home/oriaz/Desktop/QR_Recognitation/videos/online_sim.mp4')
+    cap = cv2.VideoCapture('../videos/online_sim.mp4')
 
 
     # Check if the camera is opened successfully
@@ -403,40 +302,21 @@ def controler(file_path):
             print("Error: Unable to capture frame.")
             break
 
-        corners_cap_frame, ids_cap_frame = detect_QR(frame)  # Detect QR codes in the frame
-        current_frame_id = None
+        _ , ids_cap_frame = detect_QR(frame)  # Detect QR codes in the frame
         if ids_cap_frame is not None:
-            # if first_iteration:
-            # first_iteration = False
-            
             next_frame_id, next_qr = calculate_next_frame(frame,df)
             if next_frame_id == None:
                 continue
 
             df = df[df.index.get_level_values('Frame ID') >= next_frame_id]
-            # # find a target frame row in the csv
-            # if not first_iteration:
-            #     next_frame_id = get_next_frame_id(df, next_frame_id)
             next_frame_rows = get_rows_by_frame_id(df, next_frame_id)
-            # get the corners of the cap frame
-        
-            index =  list(ids_cap_frame).index([next_qr]) 
-            rvec1, tvec1, _ = cv2.aruco.estimatePoseSingleMarkers(corners_cap_frame[index], 0.05, camera_matrix, dist_coeffs)
-
-            # get the corners of the csv frame
            
             next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
             
-            tvec2, rvec2 = calculate_rvec_tvec(next_frame_data["Distance"], 
-                                             next_frame_data["Yaw (degrees)"], 
-                                             next_frame_data["Pitch (degrees)"], 
-                                             next_frame_data["Roll (degrees)"])
-        
             
-            get_best_movement_command(frame, next_frame_data, camera_matrix, dist_coeffs)
-            current_frame_id = next_frame_id
+            get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs)
 
-        # Display the frame
+
         cv2.imshow('Live Stream', frame)
 
         # Break the loop if 'q' is pressed
@@ -453,10 +333,4 @@ def controler(file_path):
 if __name__ == "__main__":
 
     file_path = '../outputs/challengeB_data.csv'
-    controler(file_path)
-
-    
-# if __name__ == "__main__":
-#     df = pd.read_csv('../outputs/challengeB_data.csv', sep=None, engine='python')
-#     filtered_df = df[(df['Frame ID'] >= 425) & (df['Frame ID'] <= 427)]
-#     calculate_first_frame('banana',filtered_df)
+    controller(file_path)
