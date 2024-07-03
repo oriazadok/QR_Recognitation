@@ -32,7 +32,7 @@ def compute_rotation_matrix(yaw, pitch, roll):
     
     return R
     
-def calculate_camera_location(distance, yaw, pitch, roll):
+def calculate_log_location(distance, yaw, pitch, roll):
     # Compute rotation matrix
     R = compute_rotation_matrix(yaw, pitch, roll)
     
@@ -52,6 +52,16 @@ def calculate_camera_location(distance, yaw, pitch, roll):
     
     return camera_location, x_cam, y_cam, z_cam
     
+
+# Function to compute the 3D pose (distance, yaw, pitch, roll) from rotation and translation vectors
+def compute_3d_pose(rvec, tvec):
+    distance = np.linalg.norm(tvec)  # Calculate the distance
+    R, _ = cv2.Rodrigues(rvec)  # Convert rotation vector to rotation matrix
+    yaw = np.arctan2(R[1, 0], R[0, 0])  # Calculate yaw angle
+    pitch = np.arctan2(-R[2, 0], np.sqrt(R[2, 1] ** 2 + R[2, 2] ** 2))  # Calculate pitch angle
+    roll = np.arctan2(R[2, 1], R[2, 2])  # Calculate roll angle
+
+    return distance, yaw, pitch, roll
 
 def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
     """
@@ -77,28 +87,10 @@ def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
             # Estimate pose of the first detected marker
             rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners, 0.05, camera_matrix, dist_coeffs)
             
-            # Assuming the ArUco marker is at the origin (0,0,0) in marker space
-            # X axis is along the width of the marker, Y axis is along the height, Z axis is coming out of the marker
-            # Transforming tvec to camera space
-            tvec_cam = np.squeeze(tvecs[0])
+            distance, yaw, pitch, roll = compute_3d_pose(rvecs[0], tvecs[0])
             
-            # Get rotation matrix from rotation vector
-            R, _ = cv2.Rodrigues(rvecs[0])
             
-            # Define the desired vectors in marker space
-            x_marker = np.array([1, 0, 0])  # X vector along the width of the marker
-            y_marker = np.array([0, 1, 0])  # Y vector along the height of the marker
-            z_marker = np.array([0, 0, 1])  # Z vector coming out of the marker
-            
-            # Transform vectors to camera space
-            x_cam = R.dot(x_marker)
-            y_cam = R.dot(y_marker)
-            z_cam = R.dot(z_marker)
-            
-            # Calculate camera location in camera space
-            camera_location = -R.T.dot(tvec_cam)
-            
-            return camera_location, x_cam, y_cam, z_cam
+            return distance, yaw, pitch, roll
         
         else:
             raise ValueError("No ArUco marker detected")
@@ -108,9 +100,6 @@ def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
         return None, None, None, None
     
 import math
-
-def transform_coordinate_system():
-    pass
 
 def calculate_3D_distance(v1, v2):
     ans = np.linalg.norm(v1 - v2)
@@ -135,37 +124,31 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
     """
     # Detect ArUco markers in both frames
     
-    live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
-    camera_location, x_cam, y_cam, z_cam = calculate_camera_location(next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"])
-    rotation_matrix = np.column_stack((x_cam, y_cam, z_cam))
-    transformed_live_location = rotation_matrix.dot(live_camera_location)
-    distance = calculate_3D_distance(transformed_live_location, camera_location)
-    # TODO  UNCOMMAND THIS 
-    # while distance > 1:
-        # # Compute translation and rotation differences
-        # translation, rotation = compute_transform(tvec1, rvec1, tvec2, rvec2)
-        
-        # # Generate the best single movement command based on the differences
-        # command = best_single_command(translation, rotation)
-    # TODO YOU NEED TO GIVE THE FOLLOWING 3 LINES TAP WHILE STAT USE THIS FOR THE FOR LOOP
-    live_camera_location, live_x_cam, live_y_cam, live_z_cam= calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
-    transformed_live_location = rotation_matrix.dot(live_camera_location)
-    distance = calculate_3D_distance(transformed_live_location, camera_location) 
+    live_dist, live_yaw, live_pitch, live_roll = calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
+    log_dist, log_yaw, log_pitch, log_roll = next_frame_data["Distance"], next_frame_data["Yaw (degrees)"], next_frame_data["Pitch (degrees)"], next_frame_data["Roll (degrees)"]
 
-    movement_vector = camera_location - transformed_live_location
+    diffs = dict()
+    diffs['distance'] = log_dist - live_dist
+    diffs['yaw'] = log_yaw - live_yaw
+    diffs['pitch'] = log_pitch - live_pitch
+    diffs['roll'] = log_roll - live_roll
+    
     THRESHOLD = 0.1
-    if movement_vector[0] > THRESHOLD:
-        print('right')
-    elif movement_vector[0] < -THRESHOLD:
-        print('left')
-    if movement_vector[1] > THRESHOLD:
-        print("up")
-    elif movement_vector[1] < -THRESHOLD:
-        print("down")
-    if movement_vector[2] > THRESHOLD:
-        print("forward")
-    elif movement_vector[2] < -THRESHOLD:
-        print("backward")
+    command = ''
+
+    if diffs['distance'] > 0.1:
+        command += f'distance: backward\n'
+    elif diffs['distance'] < 0.1:
+        command += f'distance: forward\n'
+    if diffs['yaw'] > 10:
+        command += f'yaw: right\n'
+    elif diffs['yaw'] < 10:
+        command += f'yaw: left\n'
+    if diffs['pitch'] > 12:
+        command += f'yaw: down\n'
+    elif diffs['pitch'] < 12:
+        command += f'yaw: up\n'
+    return command
 
 
 def eulerAnglesToRotationMatrix(yaw, pitch, roll):
@@ -314,7 +297,11 @@ def controller(file_path):
             next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
             
             
-            get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs)
+            command = get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs)
+            if not command == '':
+                print(command)
+            else:
+                break
 
 
         cv2.imshow('Live Stream', frame)
