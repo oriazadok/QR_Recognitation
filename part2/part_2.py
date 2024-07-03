@@ -148,6 +148,11 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
         command += f'yaw: down\n'
     elif diffs['pitch'] < 12:
         command += f'yaw: up\n'
+    if diffs['roll'] > 0.2:
+        # may have confused between right and left
+        command += f'roll: turn right\n'
+    elif diffs['pitch'] < 12:
+        command += f'roll: turn left\n'
     return command
 
 
