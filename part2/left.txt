@@ -1,0 +1,150 @@
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+

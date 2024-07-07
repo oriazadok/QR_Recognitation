@@ -1,0 +1,240 @@
+frame_count:  46
+live_roll:  -176.85495757025714
+log_roll:  179.63045505387046
+diffs:
+356.4854126241276
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  47
+live_roll:  -177.40171105828296
+log_roll:  179.63045505387046
+diffs:
+357.0321661121534
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  48
+live_roll:  -178.00464085986846
+log_roll:  179.63045505387046
+diffs:
+357.63509591373895
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  49
+live_roll:  -177.4143313395861
+log_roll:  179.63045505387046
+diffs:
+357.04478639345655
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  50
+live_roll:  -179.29454218453398
+log_roll:  179.63045505387046
+diffs:
+358.92499723840444
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  51
+live_roll:  -178.89863027571724
+log_roll:  179.63045505387046
+diffs:
+358.5290853295877
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  52
+live_roll:  -177.98684023592025
+log_roll:  179.63045505387046
+diffs:
+357.6172952897907
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  53
+live_roll:  -179.53031580595743
+log_roll:  179.63045505387046
+diffs:
+359.1607708598279
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  54
+live_roll:  -179.6017190171854
+log_roll:  179.63045505387046
+diffs:
+359.23217407105585
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  55
+live_roll:  -178.75023619342684
+log_roll:  179.63045505387046
+diffs:
+358.3806912472973
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  56
+live_roll:  -179.80103793371532
+log_roll:  179.63045505387046
+diffs:
+359.4314929875858
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  57
+live_roll:  179.6685188862337
+log_roll:  179.63045505387046
+diffs:
+-0.038063832363235406
+False
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  58
+live_roll:  179.32406863483783
+log_roll:  179.63045505387046
+diffs:
+0.3063864190326342
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  59
+live_roll:  179.80424100791902
+log_roll:  179.63045505387046
+diffs:
+-0.17378595404855446
+False
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  60
+live_roll:  178.24546298086145
+log_roll:  179.63045505387046
+diffs:
+1.3849920730090162
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  61
+live_roll:  177.69141275136312
+log_roll:  179.63045505387046
+diffs:
+1.939042302507346
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  62
+live_roll:  179.09859786218885
+log_roll:  179.63045505387046
+diffs:
+0.5318571916816097
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  63
+live_roll:  178.311206686566
+log_roll:  179.63045505387046
+diffs:
+1.3192483673044535
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  64
+live_roll:  176.41822078367076
+log_roll:  179.63045505387046
+diffs:
+3.2122342701997013
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  65
+live_roll:  178.31992982036348
+log_roll:  179.63045505387046
+diffs:
+1.3105252335069792
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+

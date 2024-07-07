@@ -1,0 +1,168 @@
+frame_count:  47
+live_roll:  -175.98647896317797
+log_roll:  174.52602829925118
+diffs:
+350.51250726242915
+True
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  48
+live_roll:  -174.57594623153423
+log_roll:  174.52602829925118
+diffs:
+349.1019745307854
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  49
+live_roll:  -176.3187366412274
+log_roll:  174.52602829925118
+diffs:
+350.84476494047857
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  50
+live_roll:  -177.76684951160416
+log_roll:  174.52602829925118
+diffs:
+352.2928778108553
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  51
+live_roll:  -177.76894562885923
+log_roll:  174.52602829925118
+diffs:
+352.2949739281104
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  52
+live_roll:  -178.4611576725848
+log_roll:  174.52602829925118
+diffs:
+352.98718597183597
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  53
+live_roll:  -177.84063206071454
+log_roll:  174.52602829925118
+diffs:
+352.36666035996575
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  54
+live_roll:  177.29895417099792
+log_roll:  174.52602829925118
+diffs:
+-2.772925871746736
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  55
+live_roll:  175.9724236506669
+log_roll:  174.52602829925118
+diffs:
+-1.446395351415731
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  56
+live_roll:  176.41013370426526
+log_roll:  174.52602829925118
+diffs:
+-1.8841054050140826
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  57
+live_roll:  174.9443357857493
+log_roll:  174.52602829925118
+diffs:
+-0.4183074864981222
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  58
+live_roll:  177.6794816020935
+log_roll:  174.52602829925118
+diffs:
+-3.1534533028423084
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  59
+live_roll:  174.81931530929373
+log_roll:  174.52602829925118
+diffs:
+-0.29328701004254754
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  60
+live_roll:  174.52602829925118
+log_roll:  174.52602829925118
+diffs:
+0.0
+False
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+
+Error: Unable to capture frame.

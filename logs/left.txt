@@ -1,0 +1,97 @@
+frame_count:  45
+live_roll:  -175.25413368516016
+log_roll:  174.6199506942048
+diffs:
+349.87408437936494
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  46
+live_roll:  -175.32484361886583
+log_roll:  174.6199506942048
+diffs:
+349.9447943130706
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  47
+live_roll:  -176.66799890121214
+log_roll:  174.6199506942048
+diffs:
+351.28794959541693
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  48
+live_roll:  -179.60098629828576
+log_roll:  174.6199506942048
+diffs:
+354.2209369924906
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  49
+live_roll:  178.7500454055418
+log_roll:  174.6199506942048
+diffs:
+-4.130094711337023
+False
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  50
+live_roll:  172.454526734567
+log_roll:  174.6199506942048
+diffs:
+2.165423959637792
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  51
+live_roll:  170.88859788184993
+log_roll:  174.6199506942048
+diffs:
+3.7313528123548565
+True
+end of diffs
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  52
+live_roll:  174.6199506942048
+log_roll:  174.6199506942048
+diffs:
+0.0
+False
+end of diffs
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+Error: Unable to capture frame.

@@ -1,0 +1,761 @@
+frame_count:  0
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  1
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  2
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  3
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  4
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  5
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  6
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  7
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  8
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  9
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  10
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  11
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  12
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  13
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  14
+live_dist:  0.07083855406889657
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  15
+live_dist:  0.07088513563459975
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  16
+live_dist:  0.07088513563459975
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  17
+live_dist:  0.0714342511480775
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  18
+live_dist:  0.07071467654357101
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  19
+live_dist:  0.07040883162726823
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  20
+live_dist:  0.07163927575620674
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  21
+live_dist:  0.07127016496146289
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  22
+live_dist:  0.07296022436571276
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  23
+live_dist:  0.07393701343324525
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  24
+live_dist:  0.07510331572031406
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  25
+live_dist:  0.07644691104053983
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  26
+live_dist:  0.07835595281576173
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  27
+live_dist:  0.08193376947121517
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  28
+live_dist:  0.08515860872829958
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  29
+live_dist:  0.08837275393589684
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  30
+live_dist:  0.08987364869935435
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  31
+live_dist:  0.09508103674602564
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  32
+live_dist:  0.09707852910030527
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  33
+live_dist:  0.09840380445626125
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  34
+live_dist:  0.10212616409439464
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  35
+live_dist:  0.1051301640448427
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  36
+live_dist:  0.11158742984293953
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  37
+live_dist:  0.11520013908590408
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  38
+live_dist:  0.12155975443135501
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  39
+live_dist:  0.12577779730495936
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  40
+live_dist:  0.12878056956431536
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  41
+live_dist:  0.13232389462297697
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  42
+live_dist:  0.13912753108561882
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  43
+live_dist:  0.1455086670828681
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  44
+live_dist:  0.14997236157213995
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  45
+live_dist:  0.15366151287722907
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  46
+live_dist:  0.16125419474055183
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  47
+live_dist:  0.16512839309586338
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  48
+live_dist:  0.168286670592279
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  49
+live_dist:  0.17223432568482344
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  50
+live_dist:  0.17501255603714866
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  51
+live_dist:  0.17879517840514886
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  52
+live_dist:  0.18596348420690367
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  53
+live_dist:  0.18978590358734768
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  54
+live_dist:  0.19136161339178998
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  55
+live_dist:  0.19734054115090977
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  56
+live_dist:  0.19981882472618315
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  57
+live_dist:  0.21077047686745806
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  58
+live_dist:  0.21146959109421057
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  59
+live_dist:  0.21526206104014528
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  60
+live_dist:  0.2197073035582448
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  61
+live_dist:  0.22693007850597618
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  62
+live_dist:  0.22775434664893557
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  63
+live_dist:  0.23104700193657426
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  64
+live_dist:  0.2331425941400223
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  65
+live_dist:  0.23266743717019822
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  66
+live_dist:  0.23415057605656273
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  67
+live_dist:  0.24594348825124202
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  68
+live_dist:  0.24613610896212326
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  69
+live_dist:  0.24894060400807475
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  70
+live_dist:  0.24912756745767248
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  71
+live_dist:  0.25787601359548146
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  72
+live_dist:  0.25917760748476487
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  73
+live_dist:  0.2644222307469749
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  74
+live_dist:  0.2685005840461536
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  75
+live_dist:  0.2674967148311465
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  76
+live_dist:  0.2694930017545846
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  77
+live_dist:  0.2706561184462267
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  78
+live_dist:  0.2714140191525701
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  79
+live_dist:  0.2729370843018688
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  80
+live_dist:  0.27195996846716824
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  81
+live_dist:  0.2734313291855034
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  82
+live_dist:  0.2732332482440793
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  83
+live_dist:  0.2671450111031253
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  84
+live_dist:  0.26050935341689596
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  85
+live_dist:  0.26839321886294765
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  86
+live_dist:  0.269400736274105
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  87
+live_dist:  0.26889061915291373
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  88
+live_dist:  0.26567777548438726
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  89
+live_dist:  0.2648205014493284
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  90
+live_dist:  0.26471743616094157
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  91
+live_dist:  0.2611124073105563
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn left
+
+frame_count:  92
+live_dist:  0.2637166199209436
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  93
+live_dist:  0.26266506399988815
+log_dist:  0.2642142987979667
+distance: backward
+yaw: left
+pitch: up
+roll: turn right
+
+frame_count:  94
+live_dist:  0.2642142987979667
+log_dist:  0.2642142987979667
+distance: forward
+yaw: left
+pitch: up
+roll: turn left
+
+Error: Unable to capture frame.
