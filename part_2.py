@@ -2,10 +2,7 @@ import sys
 import numpy as np
 import pandas as pd
 import cv2
-import math
 import time
-
-
 
 # Function to compute the 3D pose (distance, yaw, pitch, roll) from rotation and translation vectors
 def compute_3d_pose(rvec, tvec):
@@ -29,30 +26,6 @@ def calculate_live_camera_location(frame, camera_matrix, dist_coeffs):
     Returns:
     The function returns camera_location, x_cam, y_cam, and z_cam, which describe the camera location and the orientation vectors relative to the ArUco marker.
     """
-
-    # Convert the frame to grayscale
-    # gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    # try:
-    #     # Detect markers using ArUco dictionary
-    #     corners, ids, _ = cv2.aruco.detectMarkers(gray_frame, cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_100))
-
-    #     if ids is not None and len(ids) > 0:
-    #         # Estimate pose of the first detected marker
-    #         rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(corners[0], 0.05, camera_matrix, dist_coeffs)
-            
-    #         distance, yaw, pitch, roll = compute_3d_pose(rvecs[0], tvecs[0])  # changed
-    #         yaw, pitch, roll = np.degrees([yaw, pitch, roll])  # added
-            
-            
-    #         return distance, yaw, pitch, roll
-        
-    #     else:
-    #         raise ValueError("No ArUco marker detected")
-
-    # except Exception as e:
-    #     print(f"Error detecting markers: {e}")
-    #     return None, None, None, None
 
     corners, ids = detect_QR(frame)
     if ids is not None:
@@ -82,24 +55,10 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
     live_dist, live_yaw, live_pitch, live_roll = calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
     log_dist, log_yaw, log_pitch, log_roll = next_frame_data["Distance"].iloc[0], next_frame_data["Yaw (degrees)"].iloc[0], next_frame_data["Pitch (degrees)"].iloc[0], next_frame_data["Roll (degrees)"].iloc[0]
 
-    # print("live_roll: ", live_roll)
-    # print("log_roll: ", log_roll)
-
-    # log_corners = next_frame_data["QR 2D (Corner Points)"]
-    # first_corner_points = np.array(log_corners.iloc[0])  # Access the first row of log_corners
-    # print("first_corner_points: ", first_corner_points)
-    # print("first_corner_points: ", type(first_corner_points))
-    # first_coordinates = first_corner_points[0]
-    # print("first_coordinates: ", first_coordinates)
-    # log_x0 = first_coordinates[0][0]
-    # log_y0 = first_coordinates[0][1]
-
-    og_corners = next_frame_data["QR 2D (Corner Points)"]
-    
-    list_str = og_corners.iloc[0]
+    corners_data = next_frame_data["QR 2D (Corner Points)"].iloc[0]
 
     # Convert the string representation of lists into actual Python lists
-    list_of_lists = eval(list_str)
+    list_of_lists = eval(corners_data)
 
     # Convert the list of lists into a NumPy array
     np_array = np.array(list_of_lists)
@@ -108,56 +67,53 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
     log_y0 = float(np_array[0][1])
 
     log_id = next_frame_data.index.get_level_values('QR ID')[0]
-
     corners_all, ids = detect_QR(frame)
-
     corners = corners_all[0]
-
     for i in range (len(ids) - 1):
         if ids[i][0] == log_id:
             corners = corners_all[i]
 
-    print(corners[0][0][0])
     live_x0 = float(corners[0][0][0])
     live_y0 = float(corners[0][0][1])
+
+
 
     diffs = dict()
     diffs['distance'] = log_dist - live_dist
     diffs['yaw'] = log_yaw - live_yaw
-    diffs['pitch'] = log_pitch - live_pitch
-    diffs['roll'] = abs(log_roll) - abs(live_roll)
+    diffs["vertical"] = live_y0 - log_y0
+    diffs["horizontal"] = live_x0 - log_x0
 
-  
-    THRESHOLD = 0.1
-    command = ''
+    # print("log: ", log_yaw)
+    # print("live: ", live_yaw)
+    # print(diffs['distance'])
+ 
+    command = 'move:\n'
 
-    if diffs['distance'].item() > 0.000001:
+    # forward backward condition
+    if diffs['distance'].item() > 0.008:
         command += f'distance: backward\n'
-    elif diffs['distance'].item() < -0.000001:
+    elif diffs['distance'].item() < -0.008:
         command += f'distance: forward\n'
-    if diffs['yaw'].item() > 0.1:
-        command += f'yaw: left\n'
-    elif diffs['yaw'].item() < -0.1:
-        command += f'yaw: right\n'
-    # if diffs['pitch'].item() > 8:
-    #     command += f'pitch: down\n'
-    # elif diffs['pitch'].item() < 8:
-    #     command += f'pitch: up\n'
 
-    if (live_y0 - log_y0) > 0.0001:
+    # up down condition
+    elif diffs["vertical"] > 30:
         command += f'move down\n'
-    elif live_y0 - log_y0 < -0.0001:
+    elif diffs["vertical"] < -30:
         command += f'move up\n'
 
-    if (live_x0 - log_x0) > 0.0001:
+    if diffs['yaw'].item() > 1.5:
+        command += f'yaw: right\n'
+    elif diffs['yaw'].item() < -1.5:
+        command += f'yaw: left\n'
+    
+    # left right condition
+    elif diffs["horizontal"] > 70:
         command += f'move right\n'
-    elif live_x0 - log_x0 < -0.0001:
+    elif diffs["horizontal"] < -70:
         command += f'move left\n'
-    # if diffs['roll'].item() > 0.000001:
-    #     # may have confused between right and left
-    #     command += f'roll: turn right\n'
-    # elif diffs['roll'].item() < 0.000001:
-    #     command += f'roll: turn left\n'
+
+  
     return command
 
 
@@ -180,7 +136,18 @@ def get_rows_by_frame_id(df, frame_id):
     else:
         return pd.DataFrame()  # Return an empty DataFrame if no matches are found
 
-
+def calculate_next_frame(online_frame,df:pd.DataFrame):
+    online_qrs = detect_QR(online_frame)[1]
+    online_qrs = [x[0] for x in online_qrs]
+    # Filter DataFrame to include only rows with QR IDs in the tuple
+    df_filtered = df[df.index.get_level_values('QR ID').isin(online_qrs)]
+    if df_filtered.empty:
+        return None,None
+    max_frame_id = df_filtered.index.get_level_values('Frame ID').max()
+    max_frame_id_row = df_filtered.loc[(df_filtered.index.get_level_values('Frame ID') == max_frame_id)]
+    corresponding_qr_id = max_frame_id_row.index.get_level_values('QR ID')
+    return max_frame_id, corresponding_qr_id
+    
 # Function to detect QR codes in a gtarget_idiven frame
 def detect_QR(frame):
     # Convert the frame to grayscale
@@ -209,19 +176,6 @@ def initialize_camera_parameters(resolution=(1280, 720), field_of_view=82.6):
 
     return camera_matrix, distortion_coeffs
 
-def calculate_next_frame(online_frame,df:pd.DataFrame):
-    online_qrs = detect_QR(online_frame)[1]
-    online_qrs = [x[0] for x in online_qrs]
-    # Filter DataFrame to include only rows with QR IDs in the tuple
-    df_filtered = df[df.index.get_level_values('QR ID').isin(online_qrs)]
-    if df_filtered.empty:
-        return None,None
-    max_frame_id = df_filtered.index.get_level_values('Frame ID').max()
-    max_frame_id_row = df_filtered.loc[(df_filtered.index.get_level_values('Frame ID') == max_frame_id)]
-    corresponding_qr_id = max_frame_id_row.index.get_level_values('QR ID')
-    return max_frame_id, corresponding_qr_id
-    
-
 def controller(file_path):
     # TODO add camera parameters 
     camera_matrix, dist_coeffs = initialize_camera_parameters()
@@ -233,10 +187,6 @@ def controller(file_path):
     # TODO change path to live cam path
     # Initialize the video capture object
     cap = cv2.VideoCapture('/dev/video1')
-    # cap = cv2.VideoCapture('videos/right.mp4')
-    # cap = cv2.VideoCapture('videos/left.mp4')
-    # cap = cv2.VideoCapture('videos/backward.mp4')
-
 
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -248,9 +198,10 @@ def controller(file_path):
     if not cap.isOpened():
         print("Error: Unable to open camera.")
         exit()
-    # first_iteration = True
+    
     next_frame_id = 0
-    frame_count = 0
+    counter = 0
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -268,21 +219,14 @@ def controller(file_path):
 
             df = df[df.index.get_level_values('Frame ID') >= next_frame_id]
             next_frame_rows = get_rows_by_frame_id(df, next_frame_id)
-            print("frame_count: ", frame_count)
-            # print(next_frame_rows)
-           
             next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
-            # print(next_frame_data)
             
             
             command = get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs)
-            if not command == '':
+            counter+=1
+            if not command == '' and counter % 10 == 0:
                 print(command)
-            else:
-                break
-            # time.sleep(1)
-
-        frame_count += 1
+            
         cv2.imshow('Live Stream', frame)
 
         # Break the loop if 'q' is pressed
@@ -292,8 +236,6 @@ def controller(file_path):
     # Release the video capture object and close the window
     cap.release()
     cv2.destroyAllWindows()
-
-
 
 
 if __name__ == "__main__":
