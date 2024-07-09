@@ -53,20 +53,20 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
     # Detect ArUco markers in both frames
     
     live_dist, live_yaw, live_pitch, live_roll = calculate_live_camera_location(frame, camera_matrix, dist_coeffs)
-    log_dist, log_yaw, log_pitch, log_roll = next_frame_data["Distance"].iloc[0], next_frame_data["Yaw (degrees)"].iloc[0], next_frame_data["Pitch (degrees)"].iloc[0], next_frame_data["Roll (degrees)"].iloc[0]
+    log_dist, log_yaw, log_pitch, log_roll = next_frame_data[2], next_frame_data[3], next_frame_data[4], next_frame_data[5]
 
-    corners_data = next_frame_data["QR 2D (Corner Points)"].iloc[0]
+    corners_data = next_frame_data[1]
 
-    # Convert the string representation of lists into actual Python lists
-    list_of_lists = eval(corners_data)
+    # # Convert the string representation of lists into actual Python lists
+    # list_of_lists = eval(corners_data)
 
     # Convert the list of lists into a NumPy array
-    np_array = np.array(list_of_lists)
+    np_array = np.array(corners_data)
 
     log_x0 = float(np_array[0][0])
     log_y0 = float(np_array[0][1])
 
-    log_id = next_frame_data.index.get_level_values('QR ID')[0]
+    log_id = next_frame_data[0]
     corners_all, ids = detect_QR(frame)
     corners = corners_all[0]
     for i in range (len(ids) - 1):
@@ -195,13 +195,13 @@ def initialize_camera_parameters(resolution=(1280, 720), field_of_view=82.6):
 
     return camera_matrix, distortion_coeffs
 
-def controller(file_path):
+def controller():
     # TODO add camera parameters 
     camera_matrix, dist_coeffs = initialize_camera_parameters()
 
-    # Load the CSV file
-    df = pd.read_csv(file_path, sep=None, engine='python')
-    df.set_index(['Frame ID', 'QR ID'], inplace=True)
+    # # Load the CSV file
+    # df = pd.read_csv(file_path, sep=None, engine='python')
+    # df.set_index(['Frame ID', 'QR ID'], inplace=True)
     
     # TODO change path to live cam path
     # Initialize the video capture object
@@ -218,8 +218,32 @@ def controller(file_path):
         print("Error: Unable to open camera.")
         exit()
     
-    next_frame_id = 0
+    # next_frame_id = 0
     counter = 0
+
+    while True:
+
+        ret, target_frame = cap.read()
+
+        # Check if the frame is read correctly
+        if not ret:
+            print("Error: Unable to capture frame.")
+            break
+    
+        corners_target_frame , ids_target_frame = detect_QR(target_frame)  # Detect QR codes in the frame
+        if ids_target_frame is not None:
+            rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners_target_frame[0], 0.05, camera_matrix, dist_coeffs)
+
+            corner_points = corners_target_frame[0][0]  # Get corner points of the QR code
+            corner_points_list = corner_points.tolist()  # Convert to list
+
+            distance, yaw, pitch, roll = compute_3d_pose(rvec, tvec)
+            yaw, pitch, roll = np.degrees([yaw, pitch, roll])  # Convert to degrees
+
+            next_frame_data = [ids_target_frame[0][0], corner_points_list, distance, yaw, pitch, roll]
+            print("Captured frame, Now you can move the computer")
+            print("Notice for not doing pich and roll")
+            break
 
     while(True):
         # Capture frame-by-frame
@@ -232,13 +256,14 @@ def controller(file_path):
 
         _ , ids_cap_frame = detect_QR(frame)  # Detect QR codes in the frame
         if ids_cap_frame is not None:
-            next_frame_id, next_qr = calculate_next_frame(frame,df)
-            if next_frame_id == None:
-                continue
+            # next_frame_id, next_qr = calculate_next_frame(frame,df)
+            # if next_frame_id == None:
+            #     continue
 
-            df = df[df.index.get_level_values('Frame ID') >= next_frame_id]
-            next_frame_rows = get_rows_by_frame_id(df, next_frame_id)
-            next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
+            # df = df[df.index.get_level_values('Frame ID') >= next_frame_id]
+            # next_frame_rows = get_rows_by_frame_id(df, next_frame_id)
+            # next_frame_data = next_frame_rows[next_frame_rows.index.get_level_values('QR ID') == next_qr[0]]
+            
             
             
             command = get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, dist_coeffs)
@@ -259,9 +284,9 @@ def controller(file_path):
 
 if __name__ == "__main__":
 
-    if len(sys.argv) < 2:
-        print("Error: No video file path provided.")
-        print("Usage: python part_2.py <path_to_csv>")
-        sys.exit(1)
-    file_path = sys.argv[1]
-    controller(file_path)
+    # if len(sys.argv) < 2:
+    #     print("Error: No video file path provided.")
+    #     print("Usage: python part_2.py <path_to_csv>")
+    #     sys.exit(1)
+    # file_path = sys.argv[1]
+    controller()
