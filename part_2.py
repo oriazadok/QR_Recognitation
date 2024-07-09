@@ -77,7 +77,7 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
     live_y0 = float(corners[0][0][1])
 
 
-
+    maxDistance =0
     diffs = dict()
     diffs['distance'] = log_dist - live_dist
     diffs['yaw'] = log_yaw - live_yaw
@@ -90,28 +90,47 @@ def get_movement_commands_for_this_frame(frame, next_frame_data, camera_matrix, 
  
     command = 'move:\n'
 
+    if diffs['yaw'].item() > 5:
+        if abs(diffs['yaw'])> maxDistance:
+            maxDistance = abs(diffs['yaw'])*5
+            command = f'yaw: right\n'
+            return command
+    if diffs['yaw'].item() < -5:
+        if abs(diffs['yaw'])> maxDistance:
+            maxDistance = abs(diffs['yaw'])*5
+            command = f'yaw: left\n'
+            return command
+
     # forward backward condition
-    if diffs['distance'].item() > 0.008:
-        command += f'distance: backward\n'
-    elif diffs['distance'].item() < -0.008:
-        command += f'distance: forward\n'
+    if diffs['distance'].item() > 0.08:
+        if abs(diffs['distance'])> maxDistance:
+            maxDistance = abs(diffs['distance'])*250
+            command = 'backward\n'
+    if diffs['distance'].item() < -0.08:
+        if abs(diffs['distance'])> maxDistance:
+            maxDistance = abs(diffs['distance'])*250
+            command = 'forward\n'
 
     # up down condition
-    elif diffs["vertical"] > 30:
-        command += f'move down\n'
-    elif diffs["vertical"] < -30:
-        command += f'move up\n'
+    if diffs["vertical"] > 10:
+        
+        if abs(diffs['vertical'])> maxDistance:
+            maxDistance = abs(diffs['vertical'])*2
+            command = f'move down\n'
+    if diffs["vertical"] < -10:
+        if abs(diffs['vertical'])> maxDistance:
+            maxDistance = abs(diffs['vertical'])*2
+            command = f'move up\n'
 
-    if diffs['yaw'].item() > 1.5:
-        command += f'yaw: right\n'
-    elif diffs['yaw'].item() < -1.5:
-        command += f'yaw: left\n'
-    
     # left right condition
-    elif diffs["horizontal"] > 70:
-        command += f'move right\n'
-    elif diffs["horizontal"] < -70:
-        command += f'move left\n'
+    if diffs["horizontal"] > 20:
+        if abs(diffs['horizontal'])> maxDistance:
+            maxDistance = abs(diffs['horizontal'])
+            command = f'move right\n'
+    if diffs["horizontal"] < -20:
+        if abs(diffs['horizontal'])> maxDistance:
+            maxDistance = abs(diffs['horizontal'])
+            command = f'move left\n'
 
   
     return command
@@ -186,7 +205,7 @@ def controller(file_path):
     
     # TODO change path to live cam path
     # Initialize the video capture object
-    cap = cv2.VideoCapture('/dev/video1')
+    cap = cv2.VideoCapture("/dev/video1")
 
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
