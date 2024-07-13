@@ -205,7 +205,7 @@ def controller():
     
     # TODO change path to live cam path
     # Initialize the video capture object
-    cap = cv2.VideoCapture("/dev/video1")
+    cap = cv2.VideoCapture(0)
 
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
